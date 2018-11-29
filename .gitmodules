@@ -1,0 +1,15 @@
+[submodule "ext/libio"]
+	path = ext/libio
+	url = git@github.com:CMUAbstract/libio.git
+[submodule "ext/libmsp"]
+	path = ext/libmsp
+	url = git@github.com:CMUAbstract/libmsp.git
+[submodule "ext/libmspbuiltins"]
+	path = ext/libmspbuiltins
+	url = git@github.com:CMUAbstract/libmspbuiltins.git
+[submodule "ext/gbcam"]
+	path = ext/gbcam
+	url = git@github.com:CMUAbstract/gbcam.git
+[submodule "tools/maker"]
+	path = tools/maker
+	url = git@github.com:CMUAbstract/maker.git
