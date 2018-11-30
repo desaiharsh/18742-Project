@@ -20,60 +20,64 @@ wire SCK_fallingedge = (SCKr[2:1] == 2'b10);  // and falling edges
 // same thing for SSEL
 reg [2:0] SSELr;  always @(posedge CLK) SSELr <= {SSELr[1:0], SSEL};
 wire SSEL_active = ~SSELr[1];  // SSEL is active low
-wire SSEL_startmessage = (SSELr[2:1]==2'b10);  // message starts at falling edge
-wire SSEL_endmessage = (SSELr[2:1]==2'b01);  // message stops at rising edge
+// wire SSEL_startmessage = (SSELr[2:1]==2'b10);  // message starts at falling edge
+// wire SSEL_endmessage = (SSELr[2:1]==2'b01);  // message stops at rising edge
 
 // and for MOSI
 reg [1:0] MOSIr;  always @(posedge CLK) MOSIr <= {MOSIr[0], MOSI};
 wire MOSI_data = MOSIr[1];
 
-reg [2:0] reset_reg; always @(posedge CLK) reset_reg <= {reset_reg[1:0], RESET};
-wire RESET_risingedge = (reset_reg[2:1] == 2'b10);
-wire RESET_fallingedge = (reset_reg[2:1] == 2'b01);
+// reg [2:0] reset_reg; always @(posedge CLK) reset_reg <= {reset_reg[1:0], RESET};
+// wire RESET_risingedge = (reset_reg[2:1] == 2'b10);
+// wire RESET_fallingedge = (reset_reg[2:1] == 2'b01);
 
 // we handle SPI in 8-bits format,
 //  so we need a 3 bits counter to count the bits as they come in
 reg [2:0] bitcnt;
 
-reg byte_received;  // high when a byte has been received
+reg pixel_clock;
 reg [7:0] byte_data_received;
+reg [7:0] input_pixel;
 wire [7:0] byte_data_to_send;
+reg [7:0] byte_data_sent;
+reg byte_received;
 
 // wire reset;
 // assign reset = 0;
 // wire valid;
 
+// conv CONV0(pixel_clock, ~SSEL_active, input_pixel, byte_data_to_send);
+conv CONV0(byte_received, ~SSEL_active, input_pixel, byte_data_to_send);
 
-conv CONV0(byte_received, RESET_risingedge, byte_data_received, byte_data_to_send);
 
-always @(posedge CLK)
-begin
-  if(~SSEL_active)
-    bitcnt <= 3'b000;
-  else
-  if(SCK_risingedge)
-  begin
-    bitcnt <= bitcnt + 3'b001;
-    // implement a shift-left register (since we receive the data MSB first)
-    byte_data_received <= {byte_data_received[6:0], MOSI_data};
-  end
-end
-
-always @(posedge CLK) byte_received <= SSEL_active && SCK_risingedge && (bitcnt==3'b111);
-
-reg [7:0] byte_data_sent;
-
-always @(posedge CLK)
-if(SSEL_active)
-begin
-  if (SCK_fallingedge)
-  begin
-    if(bitcnt==3'b000)
-    // byte_data_sent <= 8'h00;  // after that, we send 0s
-    byte_data_sent <= byte_data_to_send;  // after that, we send conv results
-      // byte_data_sent <= byte_data_received;  // after that, we send conv results
-    else
+always @(posedge CLK) begin
+  if (SSEL_active) begin
+    // SCK RISING EDGE
+    if (SCK_risingedge) begin
+      bitcnt <= bitcnt + 3'b001;
+      byte_data_received <= {byte_data_received[6:0], MOSI_data};
       byte_data_sent <= {byte_data_sent[6:0], 1'b0};
+      byte_received <= (bitcnt == 3'b111);
+    end
+    // SCK FALLING EDGE
+    if (SCK_fallingedge) begin
+    // if (bitcnt==3'b000) begin
+      if (byte_received) begin
+        byte_data_sent <= byte_data_to_send;  // after that, we send conv results
+        input_pixel <= byte_data_received;
+        // byte_data_sent <= input_pixel;  // after that, we send conv results
+      end else begin
+        // byte_data_sent <= {byte_data_sent[6:0], 1'b0};
+      end
+    end
+  end else begin
+  // ~SSEL_active
+    bitcnt <= 3'b000;
+    pixel_clock <= 1'b0;
+    byte_data_received <= 8'b00000000;
+    byte_received <= 1'b0;
+    byte_data_sent <= 8'b00000000;
+    input_pixel <= 8'b00000000;
   end
 end
 

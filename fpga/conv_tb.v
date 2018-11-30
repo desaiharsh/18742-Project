@@ -45,9 +45,9 @@ module conv_tb;
       end
       if (((pixel_index-1 + DIM) % DIM) == DIM-1) $write("\n");
     end
-    pixel = image[pixel_index];
     // pixel = 1;
-    // pixel = pixel_index + 1;
+    // pixel = image[pixel_index];
+    pixel = pixel_index + 1;
     pixel_index = (pixel_index + 1) % (DIM*DIM + 1);
     // if (pixel_index == (DIM*DIM-1)) reset = 1;
     // if (pixel_index == 0) reset = 0;
