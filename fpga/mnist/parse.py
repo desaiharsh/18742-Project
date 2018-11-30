@@ -14,8 +14,10 @@ for image_num in range(20):
         image = np.array(raw, dtype=np.uint8).reshape([dim,dim])
 
         with open("SendImages/image_{}.h".format(image_num), "w") as header_file:
-            header_file.write("unsigned char image[28*28] = {{\n{}\n}};".format(
-                "\n".join(["".join([str(pixel) + ", " +  " "*(3-len(str(pixel))) for pixel in row])for row in image])
+            # extra dummy pixel at the end
+            header_file.write("byte image[{dim}*{dim} + 1] = {{\n{data},\n  0\n}};".format(
+                dim=dim,
+                data=",\n".join([", ".join([" "*(3-len(str(pixel))) + str(pixel) for pixel in row])for row in image]),
             ))
 
         # im = Image.fromarray(image)
