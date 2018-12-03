@@ -17,6 +17,7 @@ msp430-elf-gcc
 
 mspdebug
 
+APIO FPGA programming
 
 ### Installing
 
