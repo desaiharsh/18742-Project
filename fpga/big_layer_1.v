@@ -9,49 +9,35 @@ module layer_1_0(
   parameter OP = 8;
 
   // parameterize output resolution between PP and CP (i.e. WP + PP)?
-  wire signed [PP:0] conv_out;
-  wire conv_valid;
-  conv_0 CONV(
+  wire signed [PP:0] conv0_out;
+  wire conv0_valid;
+  conv0_0 CONV(
     .clk (clk),
     .reset (reset),
     .pxl_in (pxl_in),
-    .conv_out (conv_out),
-    .valid (conv_valid)
+    .conv_out (conv0_out),
+    .valid (conv0_valid)
   );
 
-  // TODO: need to do valid checking for the output here?
+  wire pool0_clk;
+  assign pool0_clk = clk && conv0_valid;
+  // wire pool0_valid;
+  // wire signed [PP:0] pool0_out;
 
-  wire pool_clk;
-  assign pool_clk = clk && conv_valid;
-  // assign pool_clk = clk && row >= 5-1;
-  // TODO: register between these two to pipeline?
-
-  wire pool_valid;
-  // this reg stops the last valid pool value from echoing for the next
-  // few invalid convolution values.
-
-  reg signed [5:0] row = -2;
-
+  reg signed [5:0] pool0_row = -2;
   always @ (posedge clk) begin
-    // row <= row + 1;
-    row <= row < 32-1 ? row + 1 : 0;
+    pool0_row <= pool0_row < 32-1 ? pool0_row + 1 : 0;
   end
 
+  wire pool0_valid;
   max_pool MAX_POOL(
-    .clk (pool_clk),
+    .clk (pool0_clk),
     .reset (reset),
-    .pxl_in (conv_out),
+    .pxl_in (conv0_out),
     .pool_out (pool_out),
-    .valid (pool_valid)
+    .valid (pool0_valid)
   );
-
-  assign valid = pool_valid && (row >= 5-1);
-  // assign valid = pool_valid;
-  // assign valid = (row >= 5-1);
-  // assign valid = conv_valid && (row >= 5-1);
-  // assign valid = conv_valid;
-
-  // assign pool_out = conv_out;
+ assign valid = pool0_valid && (pool0_row >= 5-1);
 
 endmodule // layer_1
 module layer_1_1(
@@ -65,49 +51,35 @@ module layer_1_1(
   parameter OP = 8;
 
   // parameterize output resolution between PP and CP (i.e. WP + PP)?
-  wire signed [PP:0] conv_out;
-  wire conv_valid;
-  conv_1 CONV(
+  wire signed [PP:0] conv0_out;
+  wire conv0_valid;
+  conv0_1 CONV(
     .clk (clk),
     .reset (reset),
     .pxl_in (pxl_in),
-    .conv_out (conv_out),
-    .valid (conv_valid)
+    .conv_out (conv0_out),
+    .valid (conv0_valid)
   );
 
-  // TODO: need to do valid checking for the output here?
+  wire pool0_clk;
+  assign pool0_clk = clk && conv0_valid;
+  // wire pool0_valid;
+  // wire signed [PP:0] pool0_out;
 
-  wire pool_clk;
-  assign pool_clk = clk && conv_valid;
-  // assign pool_clk = clk && row >= 5-1;
-  // TODO: register between these two to pipeline?
-
-  wire pool_valid;
-  // this reg stops the last valid pool value from echoing for the next
-  // few invalid convolution values.
-
-  reg signed [5:0] row = -2;
-
+  reg signed [5:0] pool0_row = -2;
   always @ (posedge clk) begin
-    // row <= row + 1;
-    row <= row < 32-1 ? row + 1 : 0;
+    pool0_row <= pool0_row < 32-1 ? pool0_row + 1 : 0;
   end
 
+  wire pool0_valid;
   max_pool MAX_POOL(
-    .clk (pool_clk),
+    .clk (pool0_clk),
     .reset (reset),
-    .pxl_in (conv_out),
+    .pxl_in (conv0_out),
     .pool_out (pool_out),
-    .valid (pool_valid)
+    .valid (pool0_valid)
   );
-
-  assign valid = pool_valid && (row >= 5-1);
-  // assign valid = pool_valid;
-  // assign valid = (row >= 5-1);
-  // assign valid = conv_valid && (row >= 5-1);
-  // assign valid = conv_valid;
-
-  // assign pool_out = conv_out;
+ assign valid = pool0_valid && (pool0_row >= 5-1);
 
 endmodule // layer_1
 module layer_1_2(
@@ -121,49 +93,35 @@ module layer_1_2(
   parameter OP = 8;
 
   // parameterize output resolution between PP and CP (i.e. WP + PP)?
-  wire signed [PP:0] conv_out;
-  wire conv_valid;
-  conv_2 CONV(
+  wire signed [PP:0] conv0_out;
+  wire conv0_valid;
+  conv0_2 CONV(
     .clk (clk),
     .reset (reset),
     .pxl_in (pxl_in),
-    .conv_out (conv_out),
-    .valid (conv_valid)
+    .conv_out (conv0_out),
+    .valid (conv0_valid)
   );
 
-  // TODO: need to do valid checking for the output here?
+  wire pool0_clk;
+  assign pool0_clk = clk && conv0_valid;
+  // wire pool0_valid;
+  // wire signed [PP:0] pool0_out;
 
-  wire pool_clk;
-  assign pool_clk = clk && conv_valid;
-  // assign pool_clk = clk && row >= 5-1;
-  // TODO: register between these two to pipeline?
-
-  wire pool_valid;
-  // this reg stops the last valid pool value from echoing for the next
-  // few invalid convolution values.
-
-  reg signed [5:0] row = -2;
-
+  reg signed [5:0] pool0_row = -2;
   always @ (posedge clk) begin
-    // row <= row + 1;
-    row <= row < 32-1 ? row + 1 : 0;
+    pool0_row <= pool0_row < 32-1 ? pool0_row + 1 : 0;
   end
 
+  wire pool0_valid;
   max_pool MAX_POOL(
-    .clk (pool_clk),
+    .clk (pool0_clk),
     .reset (reset),
-    .pxl_in (conv_out),
+    .pxl_in (conv0_out),
     .pool_out (pool_out),
-    .valid (pool_valid)
+    .valid (pool0_valid)
   );
-
-  assign valid = pool_valid && (row >= 5-1);
-  // assign valid = pool_valid;
-  // assign valid = (row >= 5-1);
-  // assign valid = conv_valid && (row >= 5-1);
-  // assign valid = conv_valid;
-
-  // assign pool_out = conv_out;
+ assign valid = pool0_valid && (pool0_row >= 5-1);
 
 endmodule // layer_1
 module layer_1_3(
@@ -177,49 +135,35 @@ module layer_1_3(
   parameter OP = 8;
 
   // parameterize output resolution between PP and CP (i.e. WP + PP)?
-  wire signed [PP:0] conv_out;
-  wire conv_valid;
-  conv_3 CONV(
+  wire signed [PP:0] conv0_out;
+  wire conv0_valid;
+  conv0_3 CONV(
     .clk (clk),
     .reset (reset),
     .pxl_in (pxl_in),
-    .conv_out (conv_out),
-    .valid (conv_valid)
+    .conv_out (conv0_out),
+    .valid (conv0_valid)
   );
 
-  // TODO: need to do valid checking for the output here?
+  wire pool0_clk;
+  assign pool0_clk = clk && conv0_valid;
+  // wire pool0_valid;
+  // wire signed [PP:0] pool0_out;
 
-  wire pool_clk;
-  assign pool_clk = clk && conv_valid;
-  // assign pool_clk = clk && row >= 5-1;
-  // TODO: register between these two to pipeline?
-
-  wire pool_valid;
-  // this reg stops the last valid pool value from echoing for the next
-  // few invalid convolution values.
-
-  reg signed [5:0] row = -2;
-
+  reg signed [5:0] pool0_row = -2;
   always @ (posedge clk) begin
-    // row <= row + 1;
-    row <= row < 32-1 ? row + 1 : 0;
+    pool0_row <= pool0_row < 32-1 ? pool0_row + 1 : 0;
   end
 
+  wire pool0_valid;
   max_pool MAX_POOL(
-    .clk (pool_clk),
+    .clk (pool0_clk),
     .reset (reset),
-    .pxl_in (conv_out),
+    .pxl_in (conv0_out),
     .pool_out (pool_out),
-    .valid (pool_valid)
+    .valid (pool0_valid)
   );
-
-  assign valid = pool_valid && (row >= 5-1);
-  // assign valid = pool_valid;
-  // assign valid = (row >= 5-1);
-  // assign valid = conv_valid && (row >= 5-1);
-  // assign valid = conv_valid;
-
-  // assign pool_out = conv_out;
+ assign valid = pool0_valid && (pool0_row >= 5-1);
 
 endmodule // layer_1
 module layer_1_4(
@@ -233,49 +177,35 @@ module layer_1_4(
   parameter OP = 8;
 
   // parameterize output resolution between PP and CP (i.e. WP + PP)?
-  wire signed [PP:0] conv_out;
-  wire conv_valid;
-  conv_4 CONV(
+  wire signed [PP:0] conv0_out;
+  wire conv0_valid;
+  conv0_4 CONV(
     .clk (clk),
     .reset (reset),
     .pxl_in (pxl_in),
-    .conv_out (conv_out),
-    .valid (conv_valid)
+    .conv_out (conv0_out),
+    .valid (conv0_valid)
   );
 
-  // TODO: need to do valid checking for the output here?
+  wire pool0_clk;
+  assign pool0_clk = clk && conv0_valid;
+  // wire pool0_valid;
+  // wire signed [PP:0] pool0_out;
 
-  wire pool_clk;
-  assign pool_clk = clk && conv_valid;
-  // assign pool_clk = clk && row >= 5-1;
-  // TODO: register between these two to pipeline?
-
-  wire pool_valid;
-  // this reg stops the last valid pool value from echoing for the next
-  // few invalid convolution values.
-
-  reg signed [5:0] row = -2;
-
+  reg signed [5:0] pool0_row = -2;
   always @ (posedge clk) begin
-    // row <= row + 1;
-    row <= row < 32-1 ? row + 1 : 0;
+    pool0_row <= pool0_row < 32-1 ? pool0_row + 1 : 0;
   end
 
+  wire pool0_valid;
   max_pool MAX_POOL(
-    .clk (pool_clk),
+    .clk (pool0_clk),
     .reset (reset),
-    .pxl_in (conv_out),
+    .pxl_in (conv0_out),
     .pool_out (pool_out),
-    .valid (pool_valid)
+    .valid (pool0_valid)
   );
-
-  assign valid = pool_valid && (row >= 5-1);
-  // assign valid = pool_valid;
-  // assign valid = (row >= 5-1);
-  // assign valid = conv_valid && (row >= 5-1);
-  // assign valid = conv_valid;
-
-  // assign pool_out = conv_out;
+ assign valid = pool0_valid && (pool0_row >= 5-1);
 
 endmodule // layer_1
 module layer_1_5(
@@ -289,48 +219,34 @@ module layer_1_5(
   parameter OP = 8;
 
   // parameterize output resolution between PP and CP (i.e. WP + PP)?
-  wire signed [PP:0] conv_out;
-  wire conv_valid;
-  conv_5 CONV(
+  wire signed [PP:0] conv0_out;
+  wire conv0_valid;
+  conv0_5 CONV(
     .clk (clk),
     .reset (reset),
     .pxl_in (pxl_in),
-    .conv_out (conv_out),
-    .valid (conv_valid)
+    .conv_out (conv0_out),
+    .valid (conv0_valid)
   );
 
-  // TODO: need to do valid checking for the output here?
+  wire pool0_clk;
+  assign pool0_clk = clk && conv0_valid;
+  // wire pool0_valid;
+  // wire signed [PP:0] pool0_out;
 
-  wire pool_clk;
-  assign pool_clk = clk && conv_valid;
-  // assign pool_clk = clk && row >= 5-1;
-  // TODO: register between these two to pipeline?
-
-  wire pool_valid;
-  // this reg stops the last valid pool value from echoing for the next
-  // few invalid convolution values.
-
-  reg signed [5:0] row = -2;
-
+  reg signed [5:0] pool0_row = -2;
   always @ (posedge clk) begin
-    // row <= row + 1;
-    row <= row < 32-1 ? row + 1 : 0;
+    pool0_row <= pool0_row < 32-1 ? pool0_row + 1 : 0;
   end
 
+  wire pool0_valid;
   max_pool MAX_POOL(
-    .clk (pool_clk),
+    .clk (pool0_clk),
     .reset (reset),
-    .pxl_in (conv_out),
+    .pxl_in (conv0_out),
     .pool_out (pool_out),
-    .valid (pool_valid)
+    .valid (pool0_valid)
   );
-
-  assign valid = pool_valid && (row >= 5-1);
-  // assign valid = pool_valid;
-  // assign valid = (row >= 5-1);
-  // assign valid = conv_valid && (row >= 5-1);
-  // assign valid = conv_valid;
-
-  // assign pool_out = conv_out;
+ assign valid = pool0_valid && (pool0_row >= 5-1);
 
 endmodule // layer_1

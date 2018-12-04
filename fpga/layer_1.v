@@ -9,35 +9,34 @@ module layer_1(
   parameter OP = 8;
 
   // parameterize output resolution between PP and CP (i.e. WP + PP)?
-  wire signed [PP:0] conv_out;
-  wire conv_valid;
+  wire signed [PP:0] conv0_out;
+  wire conv0_valid;
   conv CONV(
     .clk (clk),
     .reset (reset),
     .pxl_in (pxl_in),
-    .conv_out (conv_out),
-    .valid (conv_valid)
+    .conv_out (conv0_out),
+    .valid (conv0_valid)
   );
 
-  wire pool_clk;
-  assign pool_clk = clk && conv_valid;
-  wire pool_valid;
+  wire pool0_clk;
+  assign pool0_clk = clk && conv0_valid;
+  // wire pool0_valid;
+  // wire signed [PP:0] pool0_out;
 
-  reg signed [5:0] row = -2;
+  reg signed [5:0] pool0_row = -2;
   always @ (posedge clk) begin
-    row <= row < 32-1 ? row + 1 : 0;
+    pool0_row <= pool0_row < 32-1 ? pool0_row + 1 : 0;
   end
 
+  wire pool0_valid;
   max_pool MAX_POOL(
-    .clk (pool_clk),
+    .clk (pool0_clk),
     .reset (reset),
-    .pxl_in (conv_out),
+    .pxl_in (conv0_out),
     .pool_out (pool_out),
-    .valid (pool_valid)
+    .valid (pool0_valid)
   );
-
-  assign valid = pool_valid && (row >= 5-1);
-
-
+ assign valid = pool0_valid && (pool0_row >= 5-1);
 
 endmodule // layer_1
