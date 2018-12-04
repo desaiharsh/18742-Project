@@ -88,7 +88,7 @@ wire layer_1_3_valid;
 wire layer_1_4_valid;
 wire layer_1_5_valid;
 
-layer_1_0 layer_1_0 (
+layer_1 layer_1 (
   .clk (pixel_clock),
   .reset (~SSEL_active),
   .pxl_in ({1'b0, input_pixel}),
@@ -96,11 +96,23 @@ layer_1_0 layer_1_0 (
   .valid (layer_1_0_valid)
 );
 
-layer_1_1 layer_1_1 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_1_out, layer_1_1_valid);
-layer_1_2 layer_1_2 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_2_out, layer_1_2_valid);
-layer_1_3 layer_1_3 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_3_out, layer_1_3_valid);
-layer_1_4 layer_1_4 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_4_out, layer_1_4_valid);
-layer_1_5 layer_1_5 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_5_out, layer_1_5_valid);
+assign byte_data_to_send = layer_1_0_out;
+// assign byte_data_to_send = {1'b0, input_pixel};
+
+
+// layer_1_0 layer_1_0 (
+//   .clk (pixel_clock),
+//   .reset (~SSEL_active),
+//   .pxl_in ({1'b0, input_pixel}),
+//   .pool_out (layer_1_0_out),
+//   .valid (layer_1_0_valid)
+// );
+//
+// layer_1_1 layer_1_1 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_1_out, layer_1_1_valid);
+// layer_1_2 layer_1_2 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_2_out, layer_1_2_valid);
+// layer_1_3 layer_1_3 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_3_out, layer_1_3_valid);
+// layer_1_4 layer_1_4 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_4_out, layer_1_4_valid);
+// layer_1_5 layer_1_5 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_5_out, layer_1_5_valid);
 
 // --------------------- LAYER 2 -------------------------------------
 
@@ -124,292 +136,307 @@ layer_1_5 layer_1_5 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_5_o
 // layer_2_1 LAYER_2_1_1 (layer_2_1_clk, ~SSEL_active, layer_1_1_2_out, layer_2_1_1_out, layer_2_1_1_valid);
 // layer_2_1 LAYER_2_1_2 (layer_2_1_clk, ~SSEL_active, layer_1_1_3_out, layer_2_1_2_out, layer_2_1_2_valid);
 // assign layer_2_1_out = layer_2_1_0_out + layer_2_1_1_out + layer_2_1_2_out;
-wire layer_2_0_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_0_out;
-wire signed [8:0] layer_2_0_0_out; wire layer_2_0_0_valid;
-wire signed [8:0] layer_2_0_1_out; wire layer_2_0_1_valid;
-wire signed [8:0] layer_2_0_2_out; wire layer_2_0_2_valid;
-layer_2_0 LAYER_2_0_0 (layer_2_0_clk, ~SSEL_active, layer_1_0_out, layer_2_0_0_out, layer_2_0_0_valid);
-layer_2_0 LAYER_2_0_1 (layer_2_0_clk, ~SSEL_active, layer_1_1_out, layer_2_0_1_out, layer_2_0_1_valid);
-layer_2_0 LAYER_2_0_2 (layer_2_0_clk, ~SSEL_active, layer_1_2_out, layer_2_0_2_out, layer_2_0_2_valid);
-assign layer_2_0_out = layer_2_0_0_out + layer_2_0_1_out + layer_2_0_2_out;
-wire pool2_0_clk;
-assign pool2_0_clk = layer_2_0_clk && layer_2_0_0_valid;
-wire signed [8:0] pool2_0_out;
-wire pool2_0_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_0(pool2_0_clk, ~SSEL_active, layer_2_0_out, pool2_0_out, pool2_0_valid);
-
-wire layer_2_1_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_1_out;
-wire signed [8:0] layer_2_1_1_out; wire layer_2_1_1_valid;
-wire signed [8:0] layer_2_1_2_out; wire layer_2_1_2_valid;
-wire signed [8:0] layer_2_1_3_out; wire layer_2_1_3_valid;
-layer_2_1 LAYER_2_1_1 (layer_2_1_clk, ~SSEL_active, layer_1_1_out, layer_2_1_1_out, layer_2_1_1_valid);
-layer_2_1 LAYER_2_1_2 (layer_2_1_clk, ~SSEL_active, layer_1_2_out, layer_2_1_2_out, layer_2_1_2_valid);
-layer_2_1 LAYER_2_1_3 (layer_2_1_clk, ~SSEL_active, layer_1_3_out, layer_2_1_3_out, layer_2_1_3_valid);
-assign layer_2_1_out = layer_2_1_1_out + layer_2_1_2_out + layer_2_1_3_out;
-wire pool2_1_clk;
-assign pool2_1_clk = layer_2_1_clk && layer_2_1_1_valid;
-wire signed [8:0] pool2_1_out;
-wire pool2_1_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_1(pool2_1_clk, ~SSEL_active, layer_2_1_out, pool2_1_out, pool2_1_valid);
-
-wire layer_2_2_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_2_out;
-wire signed [8:0] layer_2_2_2_out; wire layer_2_2_2_valid;
-wire signed [8:0] layer_2_2_3_out; wire layer_2_2_3_valid;
-wire signed [8:0] layer_2_2_4_out; wire layer_2_2_4_valid;
-layer_2_2 LAYER_2_2_2 (layer_2_2_clk, ~SSEL_active, layer_1_2_out, layer_2_2_2_out, layer_2_2_2_valid);
-layer_2_2 LAYER_2_2_3 (layer_2_2_clk, ~SSEL_active, layer_1_3_out, layer_2_2_3_out, layer_2_2_3_valid);
-layer_2_2 LAYER_2_2_4 (layer_2_2_clk, ~SSEL_active, layer_1_4_out, layer_2_2_4_out, layer_2_2_4_valid);
-assign layer_2_2_out = layer_2_2_2_out + layer_2_2_3_out + layer_2_2_4_out;
-wire pool2_2_clk;
-assign pool2_2_clk = layer_2_2_clk && layer_2_2_2_valid;
-wire signed [8:0] pool2_2_out;
-wire pool2_2_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_2(pool2_2_clk, ~SSEL_active, layer_2_2_out, pool2_2_out, pool2_2_valid);
-
-wire layer_2_3_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_3_out;
-wire signed [8:0] layer_2_3_3_out; wire layer_2_3_3_valid;
-wire signed [8:0] layer_2_3_4_out; wire layer_2_3_4_valid;
-wire signed [8:0] layer_2_3_5_out; wire layer_2_3_5_valid;
-layer_2_3 LAYER_2_3_3 (layer_2_3_clk, ~SSEL_active, layer_1_3_out, layer_2_3_3_out, layer_2_3_3_valid);
-layer_2_3 LAYER_2_3_4 (layer_2_3_clk, ~SSEL_active, layer_1_4_out, layer_2_3_4_out, layer_2_3_4_valid);
-layer_2_3 LAYER_2_3_5 (layer_2_3_clk, ~SSEL_active, layer_1_5_out, layer_2_3_5_out, layer_2_3_5_valid);
-assign layer_2_3_out = layer_2_3_3_out + layer_2_3_4_out + layer_2_3_5_out;
-wire pool2_3_clk;
-assign pool2_3_clk = layer_2_3_clk && layer_2_3_3_valid;
-wire signed [8:0] pool2_3_out;
-wire pool2_3_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_3(pool2_3_clk, ~SSEL_active, layer_2_3_out, pool2_3_out, pool2_3_valid);
-
-wire layer_2_4_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_4_out;
-wire signed [8:0] layer_2_4_0_out; wire layer_2_4_0_valid;
-wire signed [8:0] layer_2_4_4_out; wire layer_2_4_4_valid;
-wire signed [8:0] layer_2_4_5_out; wire layer_2_4_5_valid;
-layer_2_4 LAYER_2_4_0 (layer_2_4_clk, ~SSEL_active, layer_1_0_out, layer_2_4_0_out, layer_2_4_0_valid);
-layer_2_4 LAYER_2_4_4 (layer_2_4_clk, ~SSEL_active, layer_1_4_out, layer_2_4_4_out, layer_2_4_4_valid);
-layer_2_4 LAYER_2_4_5 (layer_2_4_clk, ~SSEL_active, layer_1_5_out, layer_2_4_5_out, layer_2_4_5_valid);
-assign layer_2_4_out = layer_2_4_0_out + layer_2_4_4_out + layer_2_4_5_out;
-wire pool2_4_clk;
-assign pool2_4_clk = layer_2_4_clk && layer_2_4_0_valid;
-wire signed [8:0] pool2_4_out;
-wire pool2_4_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_4(pool2_4_clk, ~SSEL_active, layer_2_4_out, pool2_4_out, pool2_4_valid);
-
-wire layer_2_5_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_5_out;
-wire signed [8:0] layer_2_5_0_out; wire layer_2_5_0_valid;
-wire signed [8:0] layer_2_5_1_out; wire layer_2_5_1_valid;
-wire signed [8:0] layer_2_5_5_out; wire layer_2_5_5_valid;
-layer_2_5 LAYER_2_5_0 (layer_2_5_clk, ~SSEL_active, layer_1_0_out, layer_2_5_0_out, layer_2_5_0_valid);
-layer_2_5 LAYER_2_5_1 (layer_2_5_clk, ~SSEL_active, layer_1_1_out, layer_2_5_1_out, layer_2_5_1_valid);
-layer_2_5 LAYER_2_5_5 (layer_2_5_clk, ~SSEL_active, layer_1_5_out, layer_2_5_5_out, layer_2_5_5_valid);
-assign layer_2_5_out = layer_2_5_0_out + layer_2_5_1_out + layer_2_5_5_out;
-wire pool2_5_clk;
-assign pool2_5_clk = layer_2_5_clk && layer_2_5_0_valid;
-wire signed [8:0] pool2_5_out;
-wire pool2_5_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_5(pool2_5_clk, ~SSEL_active, layer_2_5_out, pool2_5_out, pool2_5_valid);
-
-wire layer_2_6_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_6_out;
-wire signed [8:0] layer_2_6_0_out; wire layer_2_6_0_valid;
-wire signed [8:0] layer_2_6_1_out; wire layer_2_6_1_valid;
-wire signed [8:0] layer_2_6_2_out; wire layer_2_6_2_valid;
-wire signed [8:0] layer_2_6_3_out; wire layer_2_6_3_valid;
-layer_2_6 LAYER_2_6_0 (layer_2_6_clk, ~SSEL_active, layer_1_0_out, layer_2_6_0_out, layer_2_6_0_valid);
-layer_2_6 LAYER_2_6_1 (layer_2_6_clk, ~SSEL_active, layer_1_1_out, layer_2_6_1_out, layer_2_6_1_valid);
-layer_2_6 LAYER_2_6_2 (layer_2_6_clk, ~SSEL_active, layer_1_2_out, layer_2_6_2_out, layer_2_6_2_valid);
-layer_2_6 LAYER_2_6_3 (layer_2_6_clk, ~SSEL_active, layer_1_3_out, layer_2_6_3_out, layer_2_6_3_valid);
-assign layer_2_6_out = layer_2_6_0_out + layer_2_6_1_out + layer_2_6_2_out + layer_2_6_3_out;
-wire pool2_6_clk;
-assign pool2_6_clk = layer_2_6_clk && layer_2_6_0_valid;
-wire signed [8:0] pool2_6_out;
-wire pool2_6_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_6(pool2_6_clk, ~SSEL_active, layer_2_6_out, pool2_6_out, pool2_6_valid);
-
-wire layer_2_7_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_7_out;
-wire signed [8:0] layer_2_7_1_out; wire layer_2_7_1_valid;
-wire signed [8:0] layer_2_7_2_out; wire layer_2_7_2_valid;
-wire signed [8:0] layer_2_7_3_out; wire layer_2_7_3_valid;
-wire signed [8:0] layer_2_7_4_out; wire layer_2_7_4_valid;
-layer_2_7 LAYER_2_7_1 (layer_2_7_clk, ~SSEL_active, layer_1_1_out, layer_2_7_1_out, layer_2_7_1_valid);
-layer_2_7 LAYER_2_7_2 (layer_2_7_clk, ~SSEL_active, layer_1_2_out, layer_2_7_2_out, layer_2_7_2_valid);
-layer_2_7 LAYER_2_7_3 (layer_2_7_clk, ~SSEL_active, layer_1_3_out, layer_2_7_3_out, layer_2_7_3_valid);
-layer_2_7 LAYER_2_7_4 (layer_2_7_clk, ~SSEL_active, layer_1_4_out, layer_2_7_4_out, layer_2_7_4_valid);
-assign layer_2_7_out = layer_2_7_1_out + layer_2_7_2_out + layer_2_7_3_out + layer_2_7_4_out;
-wire pool2_7_clk;
-assign pool2_7_clk = layer_2_7_clk && layer_2_7_1_valid;
-wire signed [8:0] pool2_7_out;
-wire pool2_7_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_7(pool2_7_clk, ~SSEL_active, layer_2_7_out, pool2_7_out, pool2_7_valid);
-
-wire layer_2_8_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_8_out;
-wire signed [8:0] layer_2_8_2_out; wire layer_2_8_2_valid;
-wire signed [8:0] layer_2_8_3_out; wire layer_2_8_3_valid;
-wire signed [8:0] layer_2_8_4_out; wire layer_2_8_4_valid;
-wire signed [8:0] layer_2_8_5_out; wire layer_2_8_5_valid;
-layer_2_8 LAYER_2_8_2 (layer_2_8_clk, ~SSEL_active, layer_1_2_out, layer_2_8_2_out, layer_2_8_2_valid);
-layer_2_8 LAYER_2_8_3 (layer_2_8_clk, ~SSEL_active, layer_1_3_out, layer_2_8_3_out, layer_2_8_3_valid);
-layer_2_8 LAYER_2_8_4 (layer_2_8_clk, ~SSEL_active, layer_1_4_out, layer_2_8_4_out, layer_2_8_4_valid);
-layer_2_8 LAYER_2_8_5 (layer_2_8_clk, ~SSEL_active, layer_1_5_out, layer_2_8_5_out, layer_2_8_5_valid);
-assign layer_2_8_out = layer_2_8_2_out + layer_2_8_3_out + layer_2_8_4_out + layer_2_8_5_out;
-wire pool2_8_clk;
-assign pool2_8_clk = layer_2_8_clk && layer_2_8_2_valid;
-wire signed [8:0] pool2_8_out;
-wire pool2_8_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_8(pool2_8_clk, ~SSEL_active, layer_2_8_out, pool2_8_out, pool2_8_valid);
-
-wire layer_2_9_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_9_out;
-wire signed [8:0] layer_2_9_3_out; wire layer_2_9_3_valid;
-wire signed [8:0] layer_2_9_4_out; wire layer_2_9_4_valid;
-wire signed [8:0] layer_2_9_5_out; wire layer_2_9_5_valid;
-wire signed [8:0] layer_2_9_0_out; wire layer_2_9_0_valid;
-layer_2_9 LAYER_2_9_3 (layer_2_9_clk, ~SSEL_active, layer_1_3_out, layer_2_9_3_out, layer_2_9_3_valid);
-layer_2_9 LAYER_2_9_4 (layer_2_9_clk, ~SSEL_active, layer_1_4_out, layer_2_9_4_out, layer_2_9_4_valid);
-layer_2_9 LAYER_2_9_5 (layer_2_9_clk, ~SSEL_active, layer_1_5_out, layer_2_9_5_out, layer_2_9_5_valid);
-layer_2_9 LAYER_2_9_0 (layer_2_9_clk, ~SSEL_active, layer_1_0_out, layer_2_9_0_out, layer_2_9_0_valid);
-assign layer_2_9_out = layer_2_9_3_out + layer_2_9_4_out + layer_2_9_5_out + layer_2_9_0_out;
-wire pool2_9_clk;
-assign pool2_9_clk = layer_2_9_clk && layer_2_9_3_valid;
-wire signed [8:0] pool2_9_out;
-wire pool2_9_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_9(pool2_9_clk, ~SSEL_active, layer_2_9_out, pool2_9_out, pool2_9_valid);
-
-wire layer_2_10_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_10_out;
-wire signed [8:0] layer_2_10_4_out; wire layer_2_10_4_valid;
-wire signed [8:0] layer_2_10_5_out; wire layer_2_10_5_valid;
-wire signed [8:0] layer_2_10_0_out; wire layer_2_10_0_valid;
-wire signed [8:0] layer_2_10_1_out; wire layer_2_10_1_valid;
-layer_2_10 LAYER_2_10_4 (layer_2_10_clk, ~SSEL_active, layer_1_4_out, layer_2_10_4_out, layer_2_10_4_valid);
-layer_2_10 LAYER_2_10_5 (layer_2_10_clk, ~SSEL_active, layer_1_5_out, layer_2_10_5_out, layer_2_10_5_valid);
-layer_2_10 LAYER_2_10_0 (layer_2_10_clk, ~SSEL_active, layer_1_0_out, layer_2_10_0_out, layer_2_10_0_valid);
-layer_2_10 LAYER_2_10_1 (layer_2_10_clk, ~SSEL_active, layer_1_1_out, layer_2_10_1_out, layer_2_10_1_valid);
-assign layer_2_10_out = layer_2_10_4_out + layer_2_10_5_out + layer_2_10_0_out + layer_2_10_1_out;
-wire pool2_10_clk;
-assign pool2_10_clk = layer_2_10_clk && layer_2_10_4_valid;
-wire signed [8:0] pool2_10_out;
-wire pool2_10_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_10(pool2_10_clk, ~SSEL_active, layer_2_10_out, pool2_10_out, pool2_10_valid);
-
-wire layer_2_11_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_11_out;
-wire signed [8:0] layer_2_11_5_out; wire layer_2_11_5_valid;
-wire signed [8:0] layer_2_11_0_out; wire layer_2_11_0_valid;
-wire signed [8:0] layer_2_11_1_out; wire layer_2_11_1_valid;
-wire signed [8:0] layer_2_11_2_out; wire layer_2_11_2_valid;
-layer_2_11 LAYER_2_11_5 (layer_2_11_clk, ~SSEL_active, layer_1_5_out, layer_2_11_5_out, layer_2_11_5_valid);
-layer_2_11 LAYER_2_11_0 (layer_2_11_clk, ~SSEL_active, layer_1_0_out, layer_2_11_0_out, layer_2_11_0_valid);
-layer_2_11 LAYER_2_11_1 (layer_2_11_clk, ~SSEL_active, layer_1_1_out, layer_2_11_1_out, layer_2_11_1_valid);
-layer_2_11 LAYER_2_11_2 (layer_2_11_clk, ~SSEL_active, layer_1_2_out, layer_2_11_2_out, layer_2_11_2_valid);
-assign layer_2_11_out = layer_2_11_5_out + layer_2_11_0_out + layer_2_11_1_out + layer_2_11_2_out;
-wire pool2_11_clk;
-assign pool2_11_clk = layer_2_11_clk && layer_2_11_5_valid;
-wire signed [8:0] pool2_11_out;
-wire pool2_11_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_11(pool2_11_clk, ~SSEL_active, layer_2_11_out, pool2_11_out, pool2_11_valid);
-
-wire layer_2_12_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_12_out;
-wire signed [8:0] layer_2_12_0_out; wire layer_2_12_0_valid;
-wire signed [8:0] layer_2_12_1_out; wire layer_2_12_1_valid;
-wire signed [8:0] layer_2_12_3_out; wire layer_2_12_3_valid;
-wire signed [8:0] layer_2_12_4_out; wire layer_2_12_4_valid;
-layer_2_12 LAYER_2_12_0 (layer_2_12_clk, ~SSEL_active, layer_1_0_out, layer_2_12_0_out, layer_2_12_0_valid);
-layer_2_12 LAYER_2_12_1 (layer_2_12_clk, ~SSEL_active, layer_1_1_out, layer_2_12_1_out, layer_2_12_1_valid);
-layer_2_12 LAYER_2_12_3 (layer_2_12_clk, ~SSEL_active, layer_1_3_out, layer_2_12_3_out, layer_2_12_3_valid);
-layer_2_12 LAYER_2_12_4 (layer_2_12_clk, ~SSEL_active, layer_1_4_out, layer_2_12_4_out, layer_2_12_4_valid);
-assign layer_2_12_out = layer_2_12_0_out + layer_2_12_1_out + layer_2_12_3_out + layer_2_12_4_out;
-wire pool2_12_clk;
-assign pool2_12_clk = layer_2_12_clk && layer_2_12_0_valid;
-wire signed [8:0] pool2_12_out;
-wire pool2_12_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_12(pool2_12_clk, ~SSEL_active, layer_2_12_out, pool2_12_out, pool2_12_valid);
-
-wire layer_2_13_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_13_out;
-wire signed [8:0] layer_2_13_1_out; wire layer_2_13_1_valid;
-wire signed [8:0] layer_2_13_2_out; wire layer_2_13_2_valid;
-wire signed [8:0] layer_2_13_4_out; wire layer_2_13_4_valid;
-wire signed [8:0] layer_2_13_5_out; wire layer_2_13_5_valid;
-layer_2_13 LAYER_2_13_1 (layer_2_13_clk, ~SSEL_active, layer_1_1_out, layer_2_13_1_out, layer_2_13_1_valid);
-layer_2_13 LAYER_2_13_2 (layer_2_13_clk, ~SSEL_active, layer_1_2_out, layer_2_13_2_out, layer_2_13_2_valid);
-layer_2_13 LAYER_2_13_4 (layer_2_13_clk, ~SSEL_active, layer_1_4_out, layer_2_13_4_out, layer_2_13_4_valid);
-layer_2_13 LAYER_2_13_5 (layer_2_13_clk, ~SSEL_active, layer_1_5_out, layer_2_13_5_out, layer_2_13_5_valid);
-assign layer_2_13_out = layer_2_13_1_out + layer_2_13_2_out + layer_2_13_4_out + layer_2_13_5_out;
-wire pool2_13_clk;
-assign pool2_13_clk = layer_2_13_clk && layer_2_13_1_valid;
-wire signed [8:0] pool2_13_out;
-wire pool2_13_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_13(pool2_13_clk, ~SSEL_active, layer_2_13_out, pool2_13_out, pool2_13_valid);
-
-wire layer_2_14_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_14_out;
-wire signed [8:0] layer_2_14_0_out; wire layer_2_14_0_valid;
-wire signed [8:0] layer_2_14_2_out; wire layer_2_14_2_valid;
-wire signed [8:0] layer_2_14_3_out; wire layer_2_14_3_valid;
-wire signed [8:0] layer_2_14_5_out; wire layer_2_14_5_valid;
-layer_2_14 LAYER_2_14_0 (layer_2_14_clk, ~SSEL_active, layer_1_0_out, layer_2_14_0_out, layer_2_14_0_valid);
-layer_2_14 LAYER_2_14_2 (layer_2_14_clk, ~SSEL_active, layer_1_2_out, layer_2_14_2_out, layer_2_14_2_valid);
-layer_2_14 LAYER_2_14_3 (layer_2_14_clk, ~SSEL_active, layer_1_3_out, layer_2_14_3_out, layer_2_14_3_valid);
-layer_2_14 LAYER_2_14_5 (layer_2_14_clk, ~SSEL_active, layer_1_5_out, layer_2_14_5_out, layer_2_14_5_valid);
-assign layer_2_14_out = layer_2_14_0_out + layer_2_14_2_out + layer_2_14_3_out + layer_2_14_5_out;
-wire pool2_14_clk;
-assign pool2_14_clk = layer_2_14_clk && layer_2_14_0_valid;
-wire signed [8:0] pool2_14_out;
-wire pool2_14_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_14(pool2_14_clk, ~SSEL_active, layer_2_14_out, pool2_14_out, pool2_14_valid);
-
-wire layer_2_15_clk = pixel_clock && layer_1_0_valid;
-wire signed [8:0] layer_2_15_out;
-wire signed [8:0] layer_2_15_0_out; wire layer_2_15_0_valid;
-wire signed [8:0] layer_2_15_1_out; wire layer_2_15_1_valid;
-wire signed [8:0] layer_2_15_2_out; wire layer_2_15_2_valid;
-wire signed [8:0] layer_2_15_3_out; wire layer_2_15_3_valid;
-wire signed [8:0] layer_2_15_4_out; wire layer_2_15_4_valid;
-wire signed [8:0] layer_2_15_5_out; wire layer_2_15_5_valid;
-layer_2_15 LAYER_2_15_0 (layer_2_15_clk, ~SSEL_active, layer_1_0_out, layer_2_15_0_out, layer_2_15_0_valid);
-layer_2_15 LAYER_2_15_1 (layer_2_15_clk, ~SSEL_active, layer_1_1_out, layer_2_15_1_out, layer_2_15_1_valid);
-layer_2_15 LAYER_2_15_2 (layer_2_15_clk, ~SSEL_active, layer_1_2_out, layer_2_15_2_out, layer_2_15_2_valid);
-layer_2_15 LAYER_2_15_3 (layer_2_15_clk, ~SSEL_active, layer_1_3_out, layer_2_15_3_out, layer_2_15_3_valid);
-layer_2_15 LAYER_2_15_4 (layer_2_15_clk, ~SSEL_active, layer_1_4_out, layer_2_15_4_out, layer_2_15_4_valid);
-layer_2_15 LAYER_2_15_5 (layer_2_15_clk, ~SSEL_active, layer_1_5_out, layer_2_15_5_out, layer_2_15_5_valid);
-assign layer_2_15_out = layer_2_15_0_out + layer_2_15_1_out + layer_2_15_2_out + layer_2_15_3_out + layer_2_15_4_out + layer_2_15_5_out;
-wire pool2_15_clk;
-assign pool2_15_clk = layer_2_15_clk && layer_2_15_0_valid;
-wire signed [8:0] pool2_15_out;
-wire pool2_15_valid;
-max_pool #(.DIM(10)) MAX_POOL_2_15(pool2_15_clk, ~SSEL_active, layer_2_15_out, pool2_15_out, pool2_15_valid);
+// wire layer_2_0_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_0_out;
+// wire signed [8:0] layer_2_0_0_out; wire layer_2_0_0_valid;
+// wire signed [8:0] layer_2_0_1_out; wire layer_2_0_1_valid;
+// wire signed [8:0] layer_2_0_2_out; wire layer_2_0_2_valid;
+// layer_2_0 LAYER_2_0_0 (layer_2_0_clk, ~SSEL_active, layer_1_0_out, layer_2_0_0_out, layer_2_0_0_valid);
+// layer_2_0 LAYER_2_0_1 (layer_2_0_clk, ~SSEL_active, layer_1_1_out, layer_2_0_1_out, layer_2_0_1_valid);
+// layer_2_0 LAYER_2_0_2 (layer_2_0_clk, ~SSEL_active, layer_1_2_out, layer_2_0_2_out, layer_2_0_2_valid);
+// assign layer_2_0_out = layer_2_0_0_out + layer_2_0_1_out + layer_2_0_2_out;
+// wire pool2_0_clk;
+// assign pool2_0_clk = layer_2_0_clk && layer_2_0_0_valid;
+// wire signed [8:0] pool2_0_out;
+// wire pool2_0_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_0(pool2_0_clk, ~SSEL_active, layer_2_0_out, pool2_0_out, pool2_0_valid);
+//
+// wire layer_2_1_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_1_out;
+// wire signed [8:0] layer_2_1_1_out; wire layer_2_1_1_valid;
+// wire signed [8:0] layer_2_1_2_out; wire layer_2_1_2_valid;
+// wire signed [8:0] layer_2_1_3_out; wire layer_2_1_3_valid;
+// layer_2_1 LAYER_2_1_1 (layer_2_1_clk, ~SSEL_active, layer_1_1_out, layer_2_1_1_out, layer_2_1_1_valid);
+// layer_2_1 LAYER_2_1_2 (layer_2_1_clk, ~SSEL_active, layer_1_2_out, layer_2_1_2_out, layer_2_1_2_valid);
+// layer_2_1 LAYER_2_1_3 (layer_2_1_clk, ~SSEL_active, layer_1_3_out, layer_2_1_3_out, layer_2_1_3_valid);
+// assign layer_2_1_out = layer_2_1_1_out + layer_2_1_2_out + layer_2_1_3_out;
+// wire pool2_1_clk;
+// assign pool2_1_clk = layer_2_1_clk && layer_2_1_1_valid;
+// wire signed [8:0] pool2_1_out;
+// wire pool2_1_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_1(pool2_1_clk, ~SSEL_active, layer_2_1_out, pool2_1_out, pool2_1_valid);
+//
+// wire layer_2_2_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_2_out;
+// wire signed [8:0] layer_2_2_2_out; wire layer_2_2_2_valid;
+// wire signed [8:0] layer_2_2_3_out; wire layer_2_2_3_valid;
+// wire signed [8:0] layer_2_2_4_out; wire layer_2_2_4_valid;
+// layer_2_2 LAYER_2_2_2 (layer_2_2_clk, ~SSEL_active, layer_1_2_out, layer_2_2_2_out, layer_2_2_2_valid);
+// layer_2_2 LAYER_2_2_3 (layer_2_2_clk, ~SSEL_active, layer_1_3_out, layer_2_2_3_out, layer_2_2_3_valid);
+// layer_2_2 LAYER_2_2_4 (layer_2_2_clk, ~SSEL_active, layer_1_4_out, layer_2_2_4_out, layer_2_2_4_valid);
+// assign layer_2_2_out = layer_2_2_2_out + layer_2_2_3_out + layer_2_2_4_out;
+// wire pool2_2_clk;
+// assign pool2_2_clk = layer_2_2_clk && layer_2_2_2_valid;
+// wire signed [8:0] pool2_2_out;
+// wire pool2_2_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_2(pool2_2_clk, ~SSEL_active, layer_2_2_out, pool2_2_out, pool2_2_valid);
+//
+// wire layer_2_3_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_3_out;
+// wire signed [8:0] layer_2_3_3_out; wire layer_2_3_3_valid;
+// wire signed [8:0] layer_2_3_4_out; wire layer_2_3_4_valid;
+// wire signed [8:0] layer_2_3_5_out; wire layer_2_3_5_valid;
+// layer_2_3 LAYER_2_3_3 (layer_2_3_clk, ~SSEL_active, layer_1_3_out, layer_2_3_3_out, layer_2_3_3_valid);
+// layer_2_3 LAYER_2_3_4 (layer_2_3_clk, ~SSEL_active, layer_1_4_out, layer_2_3_4_out, layer_2_3_4_valid);
+// layer_2_3 LAYER_2_3_5 (layer_2_3_clk, ~SSEL_active, layer_1_5_out, layer_2_3_5_out, layer_2_3_5_valid);
+// assign layer_2_3_out = layer_2_3_3_out + layer_2_3_4_out + layer_2_3_5_out;
+// wire pool2_3_clk;
+// assign pool2_3_clk = layer_2_3_clk && layer_2_3_3_valid;
+// wire signed [8:0] pool2_3_out;
+// wire pool2_3_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_3(pool2_3_clk, ~SSEL_active, layer_2_3_out, pool2_3_out, pool2_3_valid);
+//
+// wire layer_2_4_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_4_out;
+// wire signed [8:0] layer_2_4_0_out; wire layer_2_4_0_valid;
+// wire signed [8:0] layer_2_4_4_out; wire layer_2_4_4_valid;
+// wire signed [8:0] layer_2_4_5_out; wire layer_2_4_5_valid;
+// layer_2_4 LAYER_2_4_0 (layer_2_4_clk, ~SSEL_active, layer_1_0_out, layer_2_4_0_out, layer_2_4_0_valid);
+// layer_2_4 LAYER_2_4_4 (layer_2_4_clk, ~SSEL_active, layer_1_4_out, layer_2_4_4_out, layer_2_4_4_valid);
+// layer_2_4 LAYER_2_4_5 (layer_2_4_clk, ~SSEL_active, layer_1_5_out, layer_2_4_5_out, layer_2_4_5_valid);
+// assign layer_2_4_out = layer_2_4_0_out + layer_2_4_4_out + layer_2_4_5_out;
+// wire pool2_4_clk;
+// assign pool2_4_clk = layer_2_4_clk && layer_2_4_0_valid;
+// wire signed [8:0] pool2_4_out;
+// wire pool2_4_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_4(pool2_4_clk, ~SSEL_active, layer_2_4_out, pool2_4_out, pool2_4_valid);
+//
+// wire layer_2_5_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_5_out;
+// wire signed [8:0] layer_2_5_0_out; wire layer_2_5_0_valid;
+// wire signed [8:0] layer_2_5_1_out; wire layer_2_5_1_valid;
+// wire signed [8:0] layer_2_5_5_out; wire layer_2_5_5_valid;
+// layer_2_5 LAYER_2_5_0 (layer_2_5_clk, ~SSEL_active, layer_1_0_out, layer_2_5_0_out, layer_2_5_0_valid);
+// layer_2_5 LAYER_2_5_1 (layer_2_5_clk, ~SSEL_active, layer_1_1_out, layer_2_5_1_out, layer_2_5_1_valid);
+// layer_2_5 LAYER_2_5_5 (layer_2_5_clk, ~SSEL_active, layer_1_5_out, layer_2_5_5_out, layer_2_5_5_valid);
+// assign layer_2_5_out = layer_2_5_0_out + layer_2_5_1_out + layer_2_5_5_out;
+// wire pool2_5_clk;
+// assign pool2_5_clk = layer_2_5_clk && layer_2_5_0_valid;
+// wire signed [8:0] pool2_5_out;
+// wire pool2_5_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_5(pool2_5_clk, ~SSEL_active, layer_2_5_out, pool2_5_out, pool2_5_valid);
+//
+// wire layer_2_6_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_6_out;
+// wire signed [8:0] layer_2_6_0_out; wire layer_2_6_0_valid;
+// wire signed [8:0] layer_2_6_1_out; wire layer_2_6_1_valid;
+// wire signed [8:0] layer_2_6_2_out; wire layer_2_6_2_valid;
+// wire signed [8:0] layer_2_6_3_out; wire layer_2_6_3_valid;
+// layer_2_6 LAYER_2_6_0 (layer_2_6_clk, ~SSEL_active, layer_1_0_out, layer_2_6_0_out, layer_2_6_0_valid);
+// layer_2_6 LAYER_2_6_1 (layer_2_6_clk, ~SSEL_active, layer_1_1_out, layer_2_6_1_out, layer_2_6_1_valid);
+// layer_2_6 LAYER_2_6_2 (layer_2_6_clk, ~SSEL_active, layer_1_2_out, layer_2_6_2_out, layer_2_6_2_valid);
+// layer_2_6 LAYER_2_6_3 (layer_2_6_clk, ~SSEL_active, layer_1_3_out, layer_2_6_3_out, layer_2_6_3_valid);
+// assign layer_2_6_out = layer_2_6_0_out + layer_2_6_1_out + layer_2_6_2_out + layer_2_6_3_out;
+// wire pool2_6_clk;
+// assign pool2_6_clk = layer_2_6_clk && layer_2_6_0_valid;
+// wire signed [8:0] pool2_6_out;
+// wire pool2_6_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_6(pool2_6_clk, ~SSEL_active, layer_2_6_out, pool2_6_out, pool2_6_valid);
+//
+// wire layer_2_7_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_7_out;
+// wire signed [8:0] layer_2_7_1_out; wire layer_2_7_1_valid;
+// wire signed [8:0] layer_2_7_2_out; wire layer_2_7_2_valid;
+// wire signed [8:0] layer_2_7_3_out; wire layer_2_7_3_valid;
+// wire signed [8:0] layer_2_7_4_out; wire layer_2_7_4_valid;
+// layer_2_7 LAYER_2_7_1 (layer_2_7_clk, ~SSEL_active, layer_1_1_out, layer_2_7_1_out, layer_2_7_1_valid);
+// layer_2_7 LAYER_2_7_2 (layer_2_7_clk, ~SSEL_active, layer_1_2_out, layer_2_7_2_out, layer_2_7_2_valid);
+// layer_2_7 LAYER_2_7_3 (layer_2_7_clk, ~SSEL_active, layer_1_3_out, layer_2_7_3_out, layer_2_7_3_valid);
+// layer_2_7 LAYER_2_7_4 (layer_2_7_clk, ~SSEL_active, layer_1_4_out, layer_2_7_4_out, layer_2_7_4_valid);
+// assign layer_2_7_out = layer_2_7_1_out + layer_2_7_2_out + layer_2_7_3_out + layer_2_7_4_out;
+// wire pool2_7_clk;
+// assign pool2_7_clk = layer_2_7_clk && layer_2_7_1_valid;
+// wire signed [8:0] pool2_7_out;
+// wire pool2_7_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_7(pool2_7_clk, ~SSEL_active, layer_2_7_out, pool2_7_out, pool2_7_valid);
+//
+// wire layer_2_8_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_8_out;
+// wire signed [8:0] layer_2_8_2_out; wire layer_2_8_2_valid;
+// wire signed [8:0] layer_2_8_3_out; wire layer_2_8_3_valid;
+// wire signed [8:0] layer_2_8_4_out; wire layer_2_8_4_valid;
+// wire signed [8:0] layer_2_8_5_out; wire layer_2_8_5_valid;
+// layer_2_8 LAYER_2_8_2 (layer_2_8_clk, ~SSEL_active, layer_1_2_out, layer_2_8_2_out, layer_2_8_2_valid);
+// layer_2_8 LAYER_2_8_3 (layer_2_8_clk, ~SSEL_active, layer_1_3_out, layer_2_8_3_out, layer_2_8_3_valid);
+// layer_2_8 LAYER_2_8_4 (layer_2_8_clk, ~SSEL_active, layer_1_4_out, layer_2_8_4_out, layer_2_8_4_valid);
+// layer_2_8 LAYER_2_8_5 (layer_2_8_clk, ~SSEL_active, layer_1_5_out, layer_2_8_5_out, layer_2_8_5_valid);
+// assign layer_2_8_out = layer_2_8_2_out + layer_2_8_3_out + layer_2_8_4_out + layer_2_8_5_out;
+// wire pool2_8_clk;
+// assign pool2_8_clk = layer_2_8_clk && layer_2_8_2_valid;
+// wire signed [8:0] pool2_8_out;
+// wire pool2_8_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_8(pool2_8_clk, ~SSEL_active, layer_2_8_out, pool2_8_out, pool2_8_valid);
+//
+// wire layer_2_9_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_9_out;
+// wire signed [8:0] layer_2_9_3_out; wire layer_2_9_3_valid;
+// wire signed [8:0] layer_2_9_4_out; wire layer_2_9_4_valid;
+// wire signed [8:0] layer_2_9_5_out; wire layer_2_9_5_valid;
+// wire signed [8:0] layer_2_9_0_out; wire layer_2_9_0_valid;
+// layer_2_9 LAYER_2_9_3 (layer_2_9_clk, ~SSEL_active, layer_1_3_out, layer_2_9_3_out, layer_2_9_3_valid);
+// layer_2_9 LAYER_2_9_4 (layer_2_9_clk, ~SSEL_active, layer_1_4_out, layer_2_9_4_out, layer_2_9_4_valid);
+// layer_2_9 LAYER_2_9_5 (layer_2_9_clk, ~SSEL_active, layer_1_5_out, layer_2_9_5_out, layer_2_9_5_valid);
+// layer_2_9 LAYER_2_9_0 (layer_2_9_clk, ~SSEL_active, layer_1_0_out, layer_2_9_0_out, layer_2_9_0_valid);
+// assign layer_2_9_out = layer_2_9_3_out + layer_2_9_4_out + layer_2_9_5_out + layer_2_9_0_out;
+// wire pool2_9_clk;
+// assign pool2_9_clk = layer_2_9_clk && layer_2_9_3_valid;
+// wire signed [8:0] pool2_9_out;
+// wire pool2_9_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_9(pool2_9_clk, ~SSEL_active, layer_2_9_out, pool2_9_out, pool2_9_valid);
+//
+// wire layer_2_10_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_10_out;
+// wire signed [8:0] layer_2_10_4_out; wire layer_2_10_4_valid;
+// wire signed [8:0] layer_2_10_5_out; wire layer_2_10_5_valid;
+// wire signed [8:0] layer_2_10_0_out; wire layer_2_10_0_valid;
+// wire signed [8:0] layer_2_10_1_out; wire layer_2_10_1_valid;
+// layer_2_10 LAYER_2_10_4 (layer_2_10_clk, ~SSEL_active, layer_1_4_out, layer_2_10_4_out, layer_2_10_4_valid);
+// layer_2_10 LAYER_2_10_5 (layer_2_10_clk, ~SSEL_active, layer_1_5_out, layer_2_10_5_out, layer_2_10_5_valid);
+// layer_2_10 LAYER_2_10_0 (layer_2_10_clk, ~SSEL_active, layer_1_0_out, layer_2_10_0_out, layer_2_10_0_valid);
+// layer_2_10 LAYER_2_10_1 (layer_2_10_clk, ~SSEL_active, layer_1_1_out, layer_2_10_1_out, layer_2_10_1_valid);
+// assign layer_2_10_out = layer_2_10_4_out + layer_2_10_5_out + layer_2_10_0_out + layer_2_10_1_out;
+// wire pool2_10_clk;
+// assign pool2_10_clk = layer_2_10_clk && layer_2_10_4_valid;
+// wire signed [8:0] pool2_10_out;
+// wire pool2_10_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_10(pool2_10_clk, ~SSEL_active, layer_2_10_out, pool2_10_out, pool2_10_valid);
+//
+// wire layer_2_11_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_11_out;
+// wire signed [8:0] layer_2_11_5_out; wire layer_2_11_5_valid;
+// wire signed [8:0] layer_2_11_0_out; wire layer_2_11_0_valid;
+// wire signed [8:0] layer_2_11_1_out; wire layer_2_11_1_valid;
+// wire signed [8:0] layer_2_11_2_out; wire layer_2_11_2_valid;
+// layer_2_11 LAYER_2_11_5 (layer_2_11_clk, ~SSEL_active, layer_1_5_out, layer_2_11_5_out, layer_2_11_5_valid);
+// layer_2_11 LAYER_2_11_0 (layer_2_11_clk, ~SSEL_active, layer_1_0_out, layer_2_11_0_out, layer_2_11_0_valid);
+// layer_2_11 LAYER_2_11_1 (layer_2_11_clk, ~SSEL_active, layer_1_1_out, layer_2_11_1_out, layer_2_11_1_valid);
+// layer_2_11 LAYER_2_11_2 (layer_2_11_clk, ~SSEL_active, layer_1_2_out, layer_2_11_2_out, layer_2_11_2_valid);
+// assign layer_2_11_out = layer_2_11_5_out + layer_2_11_0_out + layer_2_11_1_out + layer_2_11_2_out;
+// wire pool2_11_clk;
+// assign pool2_11_clk = layer_2_11_clk && layer_2_11_5_valid;
+// wire signed [8:0] pool2_11_out;
+// wire pool2_11_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_11(pool2_11_clk, ~SSEL_active, layer_2_11_out, pool2_11_out, pool2_11_valid);
+//
+// wire layer_2_12_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_12_out;
+// wire signed [8:0] layer_2_12_0_out; wire layer_2_12_0_valid;
+// wire signed [8:0] layer_2_12_1_out; wire layer_2_12_1_valid;
+// wire signed [8:0] layer_2_12_3_out; wire layer_2_12_3_valid;
+// wire signed [8:0] layer_2_12_4_out; wire layer_2_12_4_valid;
+// layer_2_12 LAYER_2_12_0 (layer_2_12_clk, ~SSEL_active, layer_1_0_out, layer_2_12_0_out, layer_2_12_0_valid);
+// layer_2_12 LAYER_2_12_1 (layer_2_12_clk, ~SSEL_active, layer_1_1_out, layer_2_12_1_out, layer_2_12_1_valid);
+// layer_2_12 LAYER_2_12_3 (layer_2_12_clk, ~SSEL_active, layer_1_3_out, layer_2_12_3_out, layer_2_12_3_valid);
+// layer_2_12 LAYER_2_12_4 (layer_2_12_clk, ~SSEL_active, layer_1_4_out, layer_2_12_4_out, layer_2_12_4_valid);
+// assign layer_2_12_out = layer_2_12_0_out + layer_2_12_1_out + layer_2_12_3_out + layer_2_12_4_out;
+// wire pool2_12_clk;
+// assign pool2_12_clk = layer_2_12_clk && layer_2_12_0_valid;
+// wire signed [8:0] pool2_12_out;
+// wire pool2_12_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_12(pool2_12_clk, ~SSEL_active, layer_2_12_out, pool2_12_out, pool2_12_valid);
+//
+// wire layer_2_13_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_13_out;
+// wire signed [8:0] layer_2_13_1_out; wire layer_2_13_1_valid;
+// wire signed [8:0] layer_2_13_2_out; wire layer_2_13_2_valid;
+// wire signed [8:0] layer_2_13_4_out; wire layer_2_13_4_valid;
+// wire signed [8:0] layer_2_13_5_out; wire layer_2_13_5_valid;
+// layer_2_13 LAYER_2_13_1 (layer_2_13_clk, ~SSEL_active, layer_1_1_out, layer_2_13_1_out, layer_2_13_1_valid);
+// layer_2_13 LAYER_2_13_2 (layer_2_13_clk, ~SSEL_active, layer_1_2_out, layer_2_13_2_out, layer_2_13_2_valid);
+// layer_2_13 LAYER_2_13_4 (layer_2_13_clk, ~SSEL_active, layer_1_4_out, layer_2_13_4_out, layer_2_13_4_valid);
+// layer_2_13 LAYER_2_13_5 (layer_2_13_clk, ~SSEL_active, layer_1_5_out, layer_2_13_5_out, layer_2_13_5_valid);
+// assign layer_2_13_out = layer_2_13_1_out + layer_2_13_2_out + layer_2_13_4_out + layer_2_13_5_out;
+// wire pool2_13_clk;
+// assign pool2_13_clk = layer_2_13_clk && layer_2_13_1_valid;
+// wire signed [8:0] pool2_13_out;
+// wire pool2_13_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_13(pool2_13_clk, ~SSEL_active, layer_2_13_out, pool2_13_out, pool2_13_valid);
+//
+// wire layer_2_14_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_14_out;
+// wire signed [8:0] layer_2_14_0_out; wire layer_2_14_0_valid;
+// wire signed [8:0] layer_2_14_2_out; wire layer_2_14_2_valid;
+// wire signed [8:0] layer_2_14_3_out; wire layer_2_14_3_valid;
+// wire signed [8:0] layer_2_14_5_out; wire layer_2_14_5_valid;
+// layer_2_14 LAYER_2_14_0 (layer_2_14_clk, ~SSEL_active, layer_1_0_out, layer_2_14_0_out, layer_2_14_0_valid);
+// layer_2_14 LAYER_2_14_2 (layer_2_14_clk, ~SSEL_active, layer_1_2_out, layer_2_14_2_out, layer_2_14_2_valid);
+// layer_2_14 LAYER_2_14_3 (layer_2_14_clk, ~SSEL_active, layer_1_3_out, layer_2_14_3_out, layer_2_14_3_valid);
+// layer_2_14 LAYER_2_14_5 (layer_2_14_clk, ~SSEL_active, layer_1_5_out, layer_2_14_5_out, layer_2_14_5_valid);
+// assign layer_2_14_out = layer_2_14_0_out + layer_2_14_2_out + layer_2_14_3_out + layer_2_14_5_out;
+// wire pool2_14_clk;
+// assign pool2_14_clk = layer_2_14_clk && layer_2_14_0_valid;
+// wire signed [8:0] pool2_14_out;
+// wire pool2_14_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_14(pool2_14_clk, ~SSEL_active, layer_2_14_out, pool2_14_out, pool2_14_valid);
+//
+// wire layer_2_15_clk = pixel_clock && layer_1_0_valid;
+// wire signed [8:0] layer_2_15_out;
+// wire signed [8:0] layer_2_15_0_out; wire layer_2_15_0_valid;
+// wire signed [8:0] layer_2_15_1_out; wire layer_2_15_1_valid;
+// wire signed [8:0] layer_2_15_2_out; wire layer_2_15_2_valid;
+// wire signed [8:0] layer_2_15_3_out; wire layer_2_15_3_valid;
+// wire signed [8:0] layer_2_15_4_out; wire layer_2_15_4_valid;
+// wire signed [8:0] layer_2_15_5_out; wire layer_2_15_5_valid;
+// layer_2_15 LAYER_2_15_0 (layer_2_15_clk, ~SSEL_active, layer_1_0_out, layer_2_15_0_out, layer_2_15_0_valid);
+// layer_2_15 LAYER_2_15_1 (layer_2_15_clk, ~SSEL_active, layer_1_1_out, layer_2_15_1_out, layer_2_15_1_valid);
+// layer_2_15 LAYER_2_15_2 (layer_2_15_clk, ~SSEL_active, layer_1_2_out, layer_2_15_2_out, layer_2_15_2_valid);
+// layer_2_15 LAYER_2_15_3 (layer_2_15_clk, ~SSEL_active, layer_1_3_out, layer_2_15_3_out, layer_2_15_3_valid);
+// layer_2_15 LAYER_2_15_4 (layer_2_15_clk, ~SSEL_active, layer_1_4_out, layer_2_15_4_out, layer_2_15_4_valid);
+// layer_2_15 LAYER_2_15_5 (layer_2_15_clk, ~SSEL_active, layer_1_5_out, layer_2_15_5_out, layer_2_15_5_valid);
+// assign layer_2_15_out = layer_2_15_0_out + layer_2_15_1_out + layer_2_15_2_out + layer_2_15_3_out + layer_2_15_4_out + layer_2_15_5_out;
+// wire pool2_15_clk;
+// assign pool2_15_clk = layer_2_15_clk && layer_2_15_0_valid;
+// wire signed [8:0] pool2_15_out;
+// wire pool2_15_valid;
+// max_pool #(.DIM(10)) MAX_POOL_2_15(pool2_15_clk, ~SSEL_active, layer_2_15_out, pool2_15_out, pool2_15_valid);
 
 
 // --------------------- LAYER 3 -------------------------------------
 
+// wire layer_3_0_clk = pixel_clock && pool_2_0_valid;
+// wire signed [8:0] layer_2_15_out;
+// wire signed [8:0] layer_2_15_0_out; wire layer_2_15_0_valid;
+// wire signed [8:0] layer_2_15_1_out; wire layer_2_15_1_valid;
+// wire signed [8:0] layer_2_15_2_out; wire layer_2_15_2_valid;
+// wire signed [8:0] layer_2_15_3_out; wire layer_2_15_3_valid;
+// wire signed [8:0] layer_2_15_4_out; wire layer_2_15_4_valid;
+// wire signed [8:0] layer_2_15_5_out; wire layer_2_15_5_valid;
+// layer_2_15 LAYER_2_15_0 (layer_2_15_clk, ~SSEL_active, layer_1_0_out, layer_2_15_0_out, layer_2_15_0_valid);
+// layer_2_15 LAYER_2_15_1 (layer_2_15_clk, ~SSEL_active, layer_1_1_out, layer_2_15_1_out, layer_2_15_1_valid);
+// layer_2_15 LAYER_2_15_2 (layer_2_15_clk, ~SSEL_active, layer_1_2_out, layer_2_15_2_out, layer_2_15_2_valid);
+// layer_2_15 LAYER_2_15_3 (layer_2_15_clk, ~SSEL_active, layer_1_3_out, layer_2_15_3_out, layer_2_15_3_valid);
+// layer_2_15 LAYER_2_15_4 (layer_2_15_clk, ~SSEL_active, layer_1_4_out, layer_2_15_4_out, layer_2_15_4_valid);
+// layer_2_15 LAYER_2_15_5 (layer_2_15_clk, ~SSEL_active, layer_1_5_out, layer_2_15_5_out, layer_2_15_5_valid);
+// assign layer_2_15_out = layer_2_15_0_out + layer_2_15_1_out + layer_2_15_2_out + layer_2_15_3_out + layer_2_15_4_out + layer_2_15_5_out;
 
 
-assign byte_data_to_send =
-layer_2_0_out +
-layer_2_1_out +
-layer_2_2_out +
-layer_2_3_out +
-layer_2_4_out +
-layer_2_5_out +
-layer_2_6_out +
-layer_2_7_out +
-layer_2_8_out +
-layer_2_9_out +
-layer_2_10_out +
-layer_2_11_out +
-layer_2_12_out +
-layer_2_13_out +
-layer_2_14_out +
-layer_2_15_out;
+// assign byte_data_to_send =
+// layer_2_0_out +
+// layer_2_1_out +
+// layer_2_2_out +
+// layer_2_3_out +
+// layer_2_4_out +
+// layer_2_5_out +
+// layer_2_6_out +
+// layer_2_7_out +
+// layer_2_8_out +
+// layer_2_9_out +
+// layer_2_10_out +
+// layer_2_11_out +
+// layer_2_12_out +
+// layer_2_13_out +
+// layer_2_14_out +
+// layer_2_15_out;
 
 // conv CONV0(pixel_clock, ~SSEL_active, {1'b0, input_pixel}, byte_data_to_send);
 // conv_sep CONV0(byte_received, ~SSEL_active, input_pixel, byte_data_to_send);
