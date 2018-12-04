@@ -52,13 +52,13 @@ module max_pool(
 
   // every other valid??
   // index into row/col
-  reg signed [5:0] row = 0;
+  reg signed [5:0] row = -1;
   reg signed [5:0] col = 0;
   // revisit this intial value if stride is different than 2.
 
 	always @(posedge clk) begin
     // row is in [0..DIM-1]
-    if (row < DIM-1) begin
+    if (row < DIM) begin
       row <= row + 1;
     end else begin
       row <= 0;
@@ -68,6 +68,6 @@ module max_pool(
   // TODO: is this right?
   // assign valid = (row >= K-1) && (col >= K-1) && (row_stride == 0) && (col_stride == 0);
 
-  assign valid = (row >= K-1) && (col >= K-1) && (row[0]) && (col[0]);
+  assign valid = (row >= K-1) && (col >= K-1) && (~row[0]) && (col[0]);
 
 endmodule

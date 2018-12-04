@@ -37,6 +37,10 @@ module conv_tb;
     .valid (valid)
   );
 
+  // should produce
+  // [33, 35,.. , 57, 59,
+  // 97, 99,.. , 121, 123,
+  // ,,]
 
   // conv conv_0 (
   //   .clk (clk),

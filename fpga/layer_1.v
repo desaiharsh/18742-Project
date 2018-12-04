@@ -30,7 +30,7 @@ module layer_1 (
   // this reg stops the last valid pool value from echoing for the next
   // few invalid convolution values.
 
-  reg signed [5:0] row = -1;
+  reg signed [5:0] row = -2;
 
   always @ (posedge clk) begin
     // row <= row + 1;
@@ -46,6 +46,8 @@ module layer_1 (
   );
 
   assign valid = pool_valid && (row >= 5-1);
+  // assign valid = pool_valid;
+  // assign valid = (row >= 5-1);
   // assign valid = conv_valid && (row >= 5-1);
   // assign valid = conv_valid;
 
