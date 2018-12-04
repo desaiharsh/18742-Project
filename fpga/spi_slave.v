@@ -101,7 +101,7 @@ wire layer_1_4_valid;
 wire layer_1_5_valid;
 
 
-layer_1 layer_1_0 (
+layer_1_0 layer_1_0 (
   .clk (pixel_clock),
   .reset (~SSEL_active),
   .pxl_in ({1'b0, input_pixel}),
@@ -109,11 +109,12 @@ layer_1 layer_1_0 (
   .valid (layer_1_0_valid)
 );
 
-layer_1 layer_1_1 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_1_out, layer_1_1_valid);
-layer_1 layer_1_2 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_2_out, layer_1_2_valid);
-layer_1 layer_1_3 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_3_out, layer_1_3_valid);
-layer_1 layer_1_4 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_4_out, layer_1_4_valid);
-layer_1 layer_1_5 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_5_out, layer_1_5_valid);
+layer_1_1 layer_1_1 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_1_out, layer_1_1_valid);
+layer_1_2 layer_1_2 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_2_out, layer_1_2_valid);
+layer_1_3 layer_1_3 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_3_out, layer_1_3_valid);
+layer_1_4 layer_1_4 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_4_out, layer_1_4_valid);
+layer_1_5 layer_1_5 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_5_out, layer_1_5_valid);
+
 // layer_1 layer_1_6 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_6_out);
 // layer_1 layer_1_7 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_7_out);
 // layer_1 layer_1_8 (pixel_clock, ~SSEL_active, {1'b0, input_pixel}, layer_1_8_out);

@@ -56,12 +56,13 @@ module conv_tb;
     #(MULT) clk = !clk;
 
   always @(posedge clk) begin
-    if (valid) $write("[%d]", conv_out);
-    if (~valid) $write(" %d ", conv_out);
+  // if (valid) $write("[%d]", conv_out);
+    if (valid) $write("%d", conv_out);
+    // if (~valid) $write(" %d ", conv_out);
     // if (valid) begin
     //   $write("%d ", conv_out);
     // end
-    if (((pixel_index-2 + DIM) % DIM) == DIM-1) $write("\n");
+    if ((((pixel_index-2 + DIM) % DIM) == DIM-1) && valid) $write("\n");
     // pixel = 1;
     // pixel = image[pixel_index];
     pixel = pixel_index + 1;

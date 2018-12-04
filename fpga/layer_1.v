@@ -1,4 +1,4 @@
-module layer_1 (
+module layer_1(
   input clk,
   input reset,
   input signed [PP:0] pxl_in,
@@ -19,21 +19,12 @@ module layer_1 (
     .valid (conv_valid)
   );
 
-  // TODO: need to do valid checking for the output here?
-
   wire pool_clk;
   assign pool_clk = clk && conv_valid;
-  // assign pool_clk = clk && row >= 5-1;
-  // TODO: register between these two to pipeline?
-
   wire pool_valid;
-  // this reg stops the last valid pool value from echoing for the next
-  // few invalid convolution values.
 
   reg signed [5:0] row = -2;
-
   always @ (posedge clk) begin
-    // row <= row + 1;
     row <= row < 32-1 ? row + 1 : 0;
   end
 
@@ -46,11 +37,7 @@ module layer_1 (
   );
 
   assign valid = pool_valid && (row >= 5-1);
-  // assign valid = pool_valid;
-  // assign valid = (row >= 5-1);
-  // assign valid = conv_valid && (row >= 5-1);
-  // assign valid = conv_valid;
 
-  // assign pool_out = conv_out;
+
 
 endmodule // layer_1
