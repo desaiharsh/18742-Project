@@ -28,7 +28,9 @@ module conv_tb;
 
   reg [7:0] pixel;
 
-  layer_1 layer_1_0 (
+  layer_1 #(
+    .WEIGHT_01(30'b111111111111111111111111111111)
+  ) layer_1_0 (
     .clk (clk),
     .reset (reset),
     .pxl_in ({1'b0, pixel}),

@@ -88,15 +88,17 @@ wire layer_1_3_valid;
 wire layer_1_4_valid;
 wire layer_1_5_valid;
 
+// assign pixel_clock = byte_received;
+
 layer_1 layer_1 (
-  .clk (pixel_clock),
+  .clk (byte_received),
   .reset (~SSEL_active),
   .pxl_in ({1'b0, input_pixel}),
   .pool_out (layer_1_0_out),
   .valid (layer_1_0_valid)
 );
 
-assign byte_data_to_send = layer_1_0_out;
+assign byte_data_to_send = layer_1_0_valid ? layer_1_0_out : 0;
 // assign byte_data_to_send = {1'b0, input_pixel};
 
 

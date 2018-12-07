@@ -9,7 +9,7 @@ parameter WP = 8;
 parameter BP = WP + IP;
 parameter CP = WP + IP;
 
-wire signed [16:0] d;
+wire signed [CP:0] d;
 assign d = w * in;
 assign out = d + b;
 endmodule

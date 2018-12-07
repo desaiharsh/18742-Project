@@ -1,6 +1,7 @@
 // `include "mac.v"
 // `include "register.v"
 // `include "shift_39.v"
+
 module conv(
   input clk,
   input reset,
@@ -20,6 +21,11 @@ module conv(
   // combined precision. TODO: minus 1?
   parameter CP = WP + PP;
 
+  parameter WEIGHT_00 = 0, WEIGHT_01 = 0, WEIGHT_02 = 0, WEIGHT_03 = 0, WEIGHT_04 = 0;
+  parameter WEIGHT_10 = 0, WEIGHT_11 = 0, WEIGHT_12 = 0, WEIGHT_13 = 0, WEIGHT_14 = 0;
+  parameter WEIGHT_20 = 0, WEIGHT_21 = 0, WEIGHT_22 = 0, WEIGHT_23 = 0, WEIGHT_24 = 0;
+  parameter WEIGHT_30 = 0, WEIGHT_31 = 0, WEIGHT_32 = 0, WEIGHT_33 = 0, WEIGHT_34 = 0;
+  parameter WEIGHT_40 = 0, WEIGHT_41 = 0, WEIGHT_42 = 0, WEIGHT_43 = 0, WEIGHT_44 = 0;
 
 	// Intermediate wires
   wire signed [CP:0] wire_00; wire signed [CP:0] wire_01; wire signed [CP:0] wire_02; wire signed [CP:0] wire_03; wire signed [CP:0] wire_04;
@@ -28,32 +34,11 @@ module conv(
   wire signed [CP:0] wire_30; wire signed [CP:0] wire_31; wire signed [CP:0] wire_32; wire signed [CP:0] wire_33; wire signed [CP:0] wire_34;
 	wire signed [CP:0] wire_40; wire signed [CP:0] wire_41; wire signed [CP:0] wire_42; wire signed [CP:0] wire_43; wire signed [CP:0] wire_44;
 
-  reg signed [WP:0] weight_00 = 30'b111111111111111111111111111111; reg signed [WP:0] weight_01 = 0; reg signed [WP:0] weight_02 = 0; reg signed [WP:0] weight_03 = 0; reg signed [WP:0] weight_04 = 0;
-  // reg signed [WP:0] weight_00 = 1; reg signed [WP:0] weight_01 = 2; reg signed [WP:0] weight_02 = 3; reg signed [WP:0] weight_03 = 4; reg signed [WP:0] weight_04 = 5;
-  // reg signed [7:0] weight_00 = -1; reg signed [7:0] weight_01 = 1; reg signed [7:0] weight_02 = 0; reg signed [7:0] weight_03 = 0; reg signed [7:0] weight_04 = 0;
-  // reg signed [7:0] weight_00 = 0; reg signed [7:0] weight_01 = -1; reg signed [7:0] weight_02 = 1; reg signed [7:0] weight_03 = 0; reg signed [7:0] weight_04 = 0;
-  // reg signed [7:0] weight_00 = 0; reg signed [7:0] weight_01 = 0; reg signed [7:0] weight_02 = 0; reg signed [7:0] weight_03 = 1; reg signed [7:0] weight_04 = -1;
-
-  // EDGE detection
-  // reg signed [7:0] weight_00 = -1; reg signed [7:0] weight_01 = 0; reg signed [7:0] weight_02 = 0; reg signed [7:0] weight_03 = 0; reg signed [7:0] weight_04 = 0;
-  // reg signed [7:0] weight_10 = 0; reg signed [7:0] weight_11 = -2; reg signed [7:0] weight_12 = 0; reg signed [7:0] weight_13 = 0; reg signed [7:0] weight_14 = 0;
-  // reg signed [7:0] weight_20 = 0; reg signed [7:0] weight_21 = 0; reg signed [7:0] weight_22 = 6; reg signed [7:0] weight_23 = 0; reg signed [7:0] weight_24 = 0;
-  // reg signed [7:0] weight_30 = 0; reg signed [7:0] weight_31 = 0; reg signed [7:0] weight_32 = 0; reg signed [7:0] weight_33 = -2; reg signed [7:0] weight_34 = 0;
-	// reg signed [7:0] weight_40 = 0; reg signed [7:0] weight_41 = 0; reg signed [7:0] weight_42 = 0; reg signed [7:0] weight_43 = 0; reg signed [7:0] weight_44 = -1;
-
-  // all non-zero
-  // reg signed [WP:0] weight_00 = 00 + 1; reg signed [WP:0] weight_01 = 01 + 1; reg signed [WP:0] weight_02 = 02 + 1; reg signed [WP:0] weight_03 = 03 + 1; reg signed [WP:0] weight_04 = 04 + 1;
-  // reg signed [WP:0] weight_10 = 10 + 1; reg signed [WP:0] weight_11 = 11 + 1; reg signed [WP:0] weight_12 = 12 + 1; reg signed [WP:0] weight_13 = 13 + 1; reg signed [WP:0] weight_14 = 14 + 1;
-  // reg signed [WP:0] weight_20 = 20 + 1; reg signed [WP:0] weight_21 = 21 + 1; reg signed [WP:0] weight_22 = 22 + 1; reg signed [WP:0] weight_23 = 23 + 1; reg signed [WP:0] weight_24 = 24 + 1;
-  // reg signed [WP:0] weight_30 = 30 + 1; reg signed [WP:0] weight_31 = 31 + 1; reg signed [WP:0] weight_32 = 32 + 1; reg signed [WP:0] weight_33 = 33 + 1; reg signed [WP:0] weight_34 = 34 + 1;
-	// reg signed [WP:0] weight_40 = 40 + 1; reg signed [WP:0] weight_41 = 41 + 1; reg signed [WP:0] weight_42 = 42 + 1; reg signed [WP:0] weight_43 = 43 + 1; reg signed [WP:0] weight_44 = 44 + 1;
-
-  // ZEROS
-  reg signed [WP:0] weight_10 = 0; reg signed [WP:0] weight_11 = 0; reg signed [WP:0] weight_12 = 0; reg signed [WP:0] weight_13 = 0; reg signed [WP:0] weight_14 = 0;
-  reg signed [WP:0] weight_20 = 0; reg signed [WP:0] weight_21 = 0; reg signed [WP:0] weight_22 = 0; reg signed [WP:0] weight_23 = 0; reg signed [WP:0] weight_24 = 0;
-  reg signed [WP:0] weight_30 = 0; reg signed [WP:0] weight_31 = 0; reg signed [WP:0] weight_32 = 0; reg signed [WP:0] weight_33 = 0; reg signed [WP:0] weight_34 = 0;
-	reg signed [WP:0] weight_40 = 0; reg signed [WP:0] weight_41 = 0; reg signed [WP:0] weight_42 = 0; reg signed [WP:0] weight_43 = 0; reg signed [WP:0] weight_44 = 0;
-
+  reg signed [WP:0] weight_00 = WEIGHT_00; reg signed [WP:0] weight_01 = WEIGHT_01; reg signed [WP:0] weight_02 = WEIGHT_02; reg signed [WP:0] weight_03 = WEIGHT_03; reg signed [WP:0] weight_04 = WEIGHT_04;
+  reg signed [WP:0] weight_10 = WEIGHT_10; reg signed [WP:0] weight_11 = WEIGHT_11; reg signed [WP:0] weight_12 = WEIGHT_12; reg signed [WP:0] weight_13 = WEIGHT_13; reg signed [WP:0] weight_14 = WEIGHT_14;
+  reg signed [WP:0] weight_20 = WEIGHT_20; reg signed [WP:0] weight_21 = WEIGHT_21; reg signed [WP:0] weight_22 = WEIGHT_22; reg signed [WP:0] weight_23 = WEIGHT_23; reg signed [WP:0] weight_24 = WEIGHT_24;
+  reg signed [WP:0] weight_30 = WEIGHT_30; reg signed [WP:0] weight_31 = WEIGHT_31; reg signed [WP:0] weight_32 = WEIGHT_32; reg signed [WP:0] weight_33 = WEIGHT_33; reg signed [WP:0] weight_34 = WEIGHT_34;
+  reg signed [WP:0] weight_40 = WEIGHT_40; reg signed [WP:0] weight_41 = WEIGHT_41; reg signed [WP:0] weight_42 = WEIGHT_42; reg signed [WP:0] weight_43 = WEIGHT_43; reg signed [WP:0] weight_44 = WEIGHT_44;
 
   wire signed [CP:0] reg_00; wire signed [CP:0] reg_01; wire signed [CP:0] reg_02; wire signed [CP:0] reg_03; wire signed [CP:0] reg_04;  wire signed [CP:0] sr_0;
   wire signed [CP:0] reg_10; wire signed [CP:0] reg_11; wire signed [CP:0] reg_12; wire signed [CP:0] reg_13; wire signed [CP:0] reg_14;  wire signed [CP:0] sr_1;

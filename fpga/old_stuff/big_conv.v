@@ -14,6 +14,13 @@ parameter WP = 30;
 parameter PP = 8;
 parameter CP = WP + PP;
 
+parameter WEIGHT_00 = 0, WEIGHT_01 = 0, WEIGHT_02 = 0, WEIGHT_03 = 0, WEIGHT_04 = 0;
+parameter WEIGHT_10 = 0, WEIGHT_11 = 0, WEIGHT_12 = 0, WEIGHT_13 = 0, WEIGHT_14 = 0;
+parameter WEIGHT_20 = 0, WEIGHT_21 = 0, WEIGHT_22 = 0, WEIGHT_23 = 0, WEIGHT_24 = 0;
+parameter WEIGHT_30 = 0, WEIGHT_31 = 0, WEIGHT_32 = 0, WEIGHT_33 = 0, WEIGHT_34 = 0;
+parameter WEIGHT_40 = 0, WEIGHT_41 = 0, WEIGHT_42 = 0, WEIGHT_43 = 0, WEIGHT_44 = 0;
+
+
 
 wire signed [CP:0] wire_00; wire signed [CP:0] wire_01; wire signed [CP:0] wire_02; wire signed [CP:0] wire_03; wire signed [CP:0] wire_04;
 wire signed [CP:0] wire_10; wire signed [CP:0] wire_11; wire signed [CP:0] wire_12; wire signed [CP:0] wire_13; wire signed [CP:0] wire_14;
@@ -22,11 +29,11 @@ wire signed [CP:0] wire_30; wire signed [CP:0] wire_31; wire signed [CP:0] wire_
 wire signed [CP:0] wire_40; wire signed [CP:0] wire_41; wire signed [CP:0] wire_42; wire signed [CP:0] wire_43; wire signed [CP:0] wire_44;
 
 
-reg signed [WP:0] weight_00 = 30'b100101000100110011100110111000; reg signed [WP:0] weight_01 = 30'b101000110001101011001100011000; reg signed [WP:0] weight_02 = 30'b101110100100011110100001101001; reg signed [WP:0] weight_03 = 30'b000111111100010110000000110111; reg signed [WP:0] weight_04 = 30'b000010010010100011111101010001;
-reg signed [WP:0] weight_10 = 30'b111111011001001101000101001011; reg signed [WP:0] weight_11 = 30'b111010110010110100101111101010; reg signed [WP:0] weight_12 = 30'b000011000101000010010101101001; reg signed [WP:0] weight_13 = 30'b111101001110000101011001110000; reg signed [WP:0] weight_14 = 30'b001010111101101001100001110001;
-reg signed [WP:0] weight_20 = 30'b111111000001100011010000001101; reg signed [WP:0] weight_21 = 30'b000000010100011011101110101101; reg signed [WP:0] weight_22 = 30'b111001001000010011011010010100; reg signed [WP:0] weight_23 = 30'b111111101111011111101010101000; reg signed [WP:0] weight_24 = 30'b111110110001000001100010011110;
-reg signed [WP:0] weight_30 = 30'b010001100101011101010111100001; reg signed [WP:0] weight_31 = 30'b000001100111101001010000100011; reg signed [WP:0] weight_32 = 30'b111110101100110001111010100001; reg signed [WP:0] weight_33 = 30'b011100100000000111100100000101; reg signed [WP:0] weight_34 = 30'b011100001011001101011001111100;
-reg signed [WP:0] weight_40 = 30'b101010111011010101010111001001; reg signed [WP:0] weight_41 = 30'b101110110010000110000101110101; reg signed [WP:0] weight_42 = 30'b001000010111100001000011100011; reg signed [WP:0] weight_43 = 30'b110110001110010000000011101111; reg signed [WP:0] weight_44 = 30'b100100001000000000000110010101;
+reg signed [WP:0] weight_00 = WEIGHT_00; reg signed [WP:0] weight_01 = WEIGHT_01; reg signed [WP:0] weight_02 = WEIGHT_02; reg signed [WP:0] weight_03 = WEIGHT_03; reg signed [WP:0] weight_04 = WEIGHT_04;
+reg signed [WP:0] weight_10 = WEIGHT_10; reg signed [WP:0] weight_11 = WEIGHT_11; reg signed [WP:0] weight_12 = WEIGHT_12; reg signed [WP:0] weight_13 = WEIGHT_13; reg signed [WP:0] weight_14 = WEIGHT_14;
+reg signed [WP:0] weight_20 = WEIGHT_20; reg signed [WP:0] weight_21 = WEIGHT_21; reg signed [WP:0] weight_22 = WEIGHT_22; reg signed [WP:0] weight_23 = WEIGHT_23; reg signed [WP:0] weight_24 = WEIGHT_24;
+reg signed [WP:0] weight_30 = WEIGHT_30; reg signed [WP:0] weight_31 = WEIGHT_31; reg signed [WP:0] weight_32 = WEIGHT_32; reg signed [WP:0] weight_33 = WEIGHT_33; reg signed [WP:0] weight_34 = WEIGHT_34;
+reg signed [WP:0] weight_40 = WEIGHT_40; reg signed [WP:0] weight_41 = WEIGHT_41; reg signed [WP:0] weight_42 = WEIGHT_42; reg signed [WP:0] weight_43 = WEIGHT_43; reg signed [WP:0] weight_44 = WEIGHT_44;
 
 
 
