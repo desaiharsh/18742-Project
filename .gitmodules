@@ -13,3 +13,6 @@
 [submodule "tools/maker"]
 	path = tools/maker
 	url = git@github.com:CMUAbstract/maker.git
+[submodule "ext/libmspware"]
+	path = ext/libmspware
+	url = git@github.com:CMUAbstract/libmspware.git

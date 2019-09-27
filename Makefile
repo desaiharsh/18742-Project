@@ -7,7 +7,7 @@ EXEC = gbcam
 
 OBJECTS = main.o gbcam.o 
 
-DEPS += libmspbuiltins libio libmsp
+DEPS += libmspbuiltins libio libmsp libmspware
 
 export MAIN_CLOCK_FREQ = 16000000
 
